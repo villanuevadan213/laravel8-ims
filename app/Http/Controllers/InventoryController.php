@@ -10,6 +10,21 @@ use Illuminate\Support\Facades\Log;
 
 class InventoryController extends Controller
 {
+    public function dashboard()
+    {
+        // Get the total count of products
+        $totalProducts = Product::count();
+
+        // Get the low stock alert (products with quantity below reorder level)
+        $lowStock = Product::where('quantity', '<', 'reorder_level')->simplePaginate(10);
+
+        // Get the recent stock movements (for example, last 5 movements)
+        $recentMovements = StockMovement::latest()->take(5)->get();
+
+        // Pass the data to the view
+        return view('dashboard', compact('totalProducts', 'lowStock', 'recentMovements'));
+    }
+
     // Show the inventory (List of all products)
     public function index()
     {
