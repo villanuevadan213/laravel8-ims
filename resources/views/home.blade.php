@@ -5,5 +5,38 @@
         </h2>
     </x-slot>
 
-    <h1>Hello from Home Page</h1>
+    <div class="bg-white shadow-lg rounded-lg p-6 mb-6 border border-gray-200">
+        <h3 class="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
+            <svg class="w-6 h-6 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                </path>
+            </svg>
+            To-Do List
+        </h3>
+        <ul class="list-disc pl-5 space-y-3">
+            <li class="text-gray-700">
+                Add Clock in and Clock out functionality
+            </li>
+            <li class="text-gray-700">
+                Implement user roles and permissions
+            </li>
+            <li class="text-gray-700">
+                Add a search functionality for better navigation
+            </li>
+            {{-- <li class="text-gray-700">
+                Implement a notification system for reminders
+            </li>
+            <li class="text-gray-700">
+                Add a feature to export data in various formats (CSV, PDF, etc.)
+            </li>
+            <li class="text-gray-700">
+                Add a feature to track user activity and logs
+            </li>
+            <li class="text-gray-700">
+                Create a feature to manage user profiles and settings
+            </li> --}}
+        </ul>
+    </div>
+
 </x-layout>
