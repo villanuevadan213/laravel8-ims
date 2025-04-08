@@ -25,10 +25,14 @@
             <div class="mb-6 sm:mb-0">
                 <h5 class="text-xl font-semibold mb-4">Follow Us</h5>
                 <div class="flex space-x-6">
-                    <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.facebook.com/" class="text-gray-300 hover:text-white" target="_blank"><i
+                            class="fab fa-facebook-f"></i></a>
+                    <a href="https://x.com/" class="text-gray-300 hover:text-white" target="_blank"><i
+                            class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/" class="text-gray-300 hover:text-white" target="_blank"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/" class="text-gray-300 hover:text-white" target="_blank"><i
+                            class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
         </div>

@@ -9,6 +9,7 @@
     <!-- Stylesheets -->
     <script src="{{ asset('common/js/app.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 </head>
 
 <body class="flex flex-col min-h-screen bg-gray-50">
