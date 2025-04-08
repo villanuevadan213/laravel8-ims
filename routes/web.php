@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\RegisterUserController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StockMovementController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +19,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::resource('categories', CategoryController::class);
+Route::resource('products', ProductController::class);
+Route::resource('stock-movements', StockMovementController::class);
+
 Route::get('/', function () {
     return view('home');
 });
@@ -23,9 +31,13 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 });
 
-Route::get('/inventory', function () {
-    return view('inventory');
-});
+Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+Route::get('/inventory/create', [InventoryController::class, 'create'])->name('inventory.create');
+Route::post('/inventory', [InventoryController::class, 'store'])->name('inventory.store');
+Route::get('/inventory/{id}', [InventoryController::class, 'show'])->name('inventory.show');
+Route::get('/inventory/{id}/edit', [InventoryController::class, 'edit'])->name('inventory.edit');
+Route::put('/inventory/{id}', [InventoryController::class, 'update'])->name('inventory.update');
+Route::delete('/inventory/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
 
 //Auth
 Route::get('/register', [RegisterUserController::class, 'create']);

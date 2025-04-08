@@ -16,9 +16,10 @@ class CreateStockMovementsTable extends Migration
         Schema::create('stock_movements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->enum('movement_type', ['in', 'out']);
+            $table->enum('type', ['in', 'out']);
             $table->integer('quantity');
-            $table->string('reference_note')->nullable();
+            $table->decimal('price', 10, 2);
+            $table->string('reference')->nullable();
             $table->timestamps();
         });
     }
