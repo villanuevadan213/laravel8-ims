@@ -5,10 +5,9 @@
             <div class="mb-6 sm:mb-0">
                 <h5 class="text-xl font-semibold mb-4">Quick Links</h5>
                 <ul class="space-y-2">
-                    <li><a href="#" class="hover:text-gray-400">Home</a></li>
-                    <li><a href="#" class="hover:text-gray-400">About Us</a></li>
-                    <li><a href="#" class="hover:text-gray-400">Services</a></li>
-                    <li><a href="#" class="hover:text-gray-400">Contact</a></li>
+                    <li><a href="/" class="hover:text-gray-400">Home</a></li>
+                    <li><a href="/dashboard" class="hover:text-gray-400">Dashboard</a></li>
+                    <li><a href="/inventory" class="hover:text-gray-400">Inventory</a></li>
                 </ul>
             </div>
 
