@@ -6,40 +6,37 @@
     </x-slot>
 
     <div class="container mx-auto mt-4 px-4">
-        <div class="bg-white shadow-md rounded-lg p-6">
-            <table class="w-full">
-                <tr>
-                    <th class="text-left text-sm font-medium text-gray-700">Name</th>
-                    <td class="text-sm text-gray-900">{{ $product->name }}</td>
-                </tr>
-                <tr>
-                    <th class="text-left text-sm font-medium text-gray-700">SKU</th>
-                    <td class="text-sm text-gray-900">{{ $product->sku }}</td>
-                </tr>
-                <tr>
-                    <th class="text-left text-sm font-medium text-gray-700">Category</th>
-                    <td class="text-sm text-gray-900">{{ $product->category->name }}</td>
-                </tr>
-                <tr>
-                    <th class="text-left text-sm font-medium text-gray-700">Quantity</th>
-                    <td class="text-sm text-gray-900">{{ $product->quantity }}</td>
-                </tr>
-                <tr>
-                    <th class="text-left text-sm font-medium text-gray-700">Reorder Level</th>
-                    <td class="text-sm text-gray-900">{{ $product->reorder_level }}</td>
-                </tr>
-            </table>
+        <div class="mb-4">
+            <h3 class="text-lg font-medium text-gray-800">Product Information</h3>
+            <p>Name: {{ $product->name }}</p>
+            <p>SKU: {{ $product->sku }}</p>
+            <p>Quantity: {{ $product->quantity }}</p>
+            <p>Unit: {{ $product->unit }}</p>
+            <p>Category: {{ $product->category->name }}</p>
+        </div>
 
-            <div class="mt-4 flex space-x-2">
-                <a href="{{ route('inventory.edit', $product->id) }}"
-                    class="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600">Edit</a>
-                <form action="{{ route('inventory.destroy', $product->id) }}" method="POST" class="inline-block">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit"
-                        class="px-6 py-3 bg-red-500 text-white rounded-md hover:bg-red-600">Delete</button>
-                </form>
-            </div>
+        <div class="mb-4">
+            <h3 class="text-lg font-medium text-gray-800">Stock Movement History</h3>
+            <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2 text-left">Type</th>
+                        <th class="px-4 py-2 text-left">Quantity</th>
+                        <th class="px-4 py-2 text-left">Reference</th>
+                        <th class="px-4 py-2 text-left">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($product->stockMovements as $movement)
+                        <tr>
+                            <td class="px-4 py-2">{{ ucfirst($movement->type) }}</td>
+                            <td class="px-4 py-2">{{ $movement->quantity }}</td>
+                            <td class="px-4 py-2">{{ $movement->reference }}</td>
+                            <td class="px-4 py-2">{{ $movement->created_at->format('d-m-Y H:i') }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </x-layout>

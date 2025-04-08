@@ -18,8 +18,8 @@ class CreateStockMovementsTable extends Migration
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->enum('type', ['in', 'out']);
             $table->integer('quantity');
-            $table->decimal('price', 10, 2);
             $table->string('reference')->nullable();
+            $table->decimal('price', 10, 2)->default(0);
             $table->timestamps();
         });
     }

@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\StockMovement;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class InventoryController extends Controller
 {
@@ -26,6 +27,7 @@ class InventoryController extends Controller
     // Store a new product in the inventory
     public function store(Request $request)
     {
+        // Validate input
         $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'required|string|unique:products',
@@ -35,13 +37,23 @@ class InventoryController extends Controller
             'category_id' => 'required|exists:categories,id',
         ]);
 
-        Product::create([
+        // Store the product
+        $product = Product::create([
             'name' => $request->name,
             'sku' => $request->sku,
             'quantity' => $request->quantity,
             'unit' => $request->unit,
             'reorder_level' => $request->reorder_level,
             'category_id' => $request->category_id,
+        ]);
+
+        // ✅ Manually create StockMovement for the initial stock setup
+        StockMovement::create([
+            'product_id' => $product->id,
+            'type' => 'in',  // Type "in" for stock added
+            'quantity' => $product->quantity,  // Set quantity as the initial stock
+            'reference' => 'Initial stock setup',  // Reference for the first entry
+            'price' => 0,  // Add price if needed (or keep 0 if not)
         ]);
 
         return redirect()->route('inventory.index')->with('success', 'Product added successfully');
@@ -65,6 +77,7 @@ class InventoryController extends Controller
     // Update the product in the inventory
     public function update(Request $request, $id)
     {
+        // Validate input
         $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'required|string|unique:products,sku,' . $id,
@@ -74,7 +87,11 @@ class InventoryController extends Controller
             'category_id' => 'required|exists:categories,id',
         ]);
 
+        // Fetch product for update
         $product = Product::findOrFail($id);
+        $originalQuantity = $product->quantity;
+
+        // Update product details
         $product->update([
             'name' => $request->name,
             'sku' => $request->sku,
@@ -84,13 +101,37 @@ class InventoryController extends Controller
             'category_id' => $request->category_id,
         ]);
 
+        // ✅ Add StockMovement only if quantity has changed
+        if ($product->quantity != $originalQuantity) {
+            $movementType = $product->quantity < $originalQuantity ? 'out' : 'in';
+            StockMovement::create([
+                'product_id' => $product->id,
+                'type' => $movementType,
+                'quantity' => abs($product->quantity - $originalQuantity),  // Quantity difference
+                'reference' => 'Stock updated',  // Update reference
+                'price' => 0,  // Add price if needed (or keep 0 if not)
+            ]);
+        }
+
         return redirect()->route('inventory.index')->with('success', 'Product updated successfully');
     }
 
     // Delete the product from the inventory
     public function destroy($id)
     {
+        // Fetch product
         $product = Product::findOrFail($id);
+
+        // Log a stock movement if the product is being deleted
+        StockMovement::create([
+            'product_id' => $product->id,
+            'type' => 'out',  // Stock is removed when product is deleted
+            'quantity' => $product->quantity,
+            'reference' => 'Product deleted',
+            'price' => 0,
+        ]);
+
+        // Delete the product
         $product->delete();
 
         return redirect()->route('inventory.index')->with('success', 'Product deleted successfully');

@@ -11,14 +11,17 @@ class StockMovementController extends Controller
     // Display a listing of the stock movements
     public function index()
     {
+        // Get all stock movements and pass to the view
         $stockMovements = StockMovement::with('product')->get();
-        return response()->json($stockMovements);
+        return view('stock_movements.index', compact('stockMovements'));
     }
 
     // Show the form for creating a new stock movement
     public function create()
     {
-        // Return data for creating a new stock movement
+        // Get all products to display in a dropdown or select input
+        $products = Product::all();
+        return view('stock_movements.create', compact('products'));
     }
 
     // Store a newly created stock movement in the database
@@ -26,40 +29,37 @@ class StockMovementController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'type' => 'required|in:in,out',
+            'type' => 'required|string',
             'quantity' => 'required|integer',
-            'reference_note' => 'nullable|string|max:255',
+            'reference' => 'nullable|string',
+            'price' => 'nullable|numeric',
         ]);
 
-        $stockMovement = StockMovement::create([
+        // Create the stock movement
+        StockMovement::create([
             'product_id' => $request->product_id,
             'type' => $request->type,
             'quantity' => $request->quantity,
-            'reference_note' => $request->reference_note,
+            'reference' => $request->reference,
+            'price' => $request->price,
         ]);
 
-        // Update product quantity based on stock movement type
-        $product = Product::findOrFail($request->product_id);
-        if ($request->type === 'in') {
-            $product->increment('quantity', $request->quantity);
-        } else {
-            $product->decrement('quantity', $request->quantity);
-        }
-
-        return response()->json($stockMovement, 201);
+        return redirect()->route('stock-movement.index')->with('success', 'Stock movement added successfully.');
     }
 
     // Display the specified stock movement
     public function show($id)
     {
         $stockMovement = StockMovement::with('product')->findOrFail($id);
-        return response()->json($stockMovement);
+        return view('stock_movements.show', compact('stockMovement'));
     }
 
     // Show the form for editing the specified stock movement
     public function edit($id)
     {
-        // Return data for editing the stock movement
+        $stockMovement = StockMovement::findOrFail($id);
+        $products = Product::all();
+        return view('stock_movements.edit', compact('stockMovement', 'products'));
     }
 
     // Update the specified stock movement in the database
@@ -67,9 +67,10 @@ class StockMovementController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'type' => 'required|in:in,out',
+            'type' => 'required|string',
             'quantity' => 'required|integer',
-            'reference_note' => 'nullable|string|max:255',
+            'reference' => 'nullable|string',
+            'price' => 'nullable|numeric',
         ]);
 
         $stockMovement = StockMovement::findOrFail($id);
@@ -77,10 +78,11 @@ class StockMovementController extends Controller
             'product_id' => $request->product_id,
             'type' => $request->type,
             'quantity' => $request->quantity,
-            'reference_note' => $request->reference_note,
+            'reference' => $request->reference,
+            'price' => $request->price,
         ]);
 
-        return response()->json($stockMovement);
+        return redirect()->route('stock-movement.index')->with('success', 'Stock movement updated successfully.');
     }
 
     // Remove the specified stock movement from the database
@@ -89,6 +91,6 @@ class StockMovementController extends Controller
         $stockMovement = StockMovement::findOrFail($id);
         $stockMovement->delete();
 
-        return response()->json(null, 204);
+        return redirect()->route('stock-movement.index')->with('success', 'Stock movement deleted successfully.');
     }
 }
