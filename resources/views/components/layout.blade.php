@@ -109,7 +109,12 @@
     <!-- Header Section -->
     <header class="bg-white shadow-sm">
         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold tracking-tight text-gray-900">{{ $header }}</h1>
+            <div class="flex justify-between items-center">
+                {{ $header }}
+                <p id="current-time" class="text-sm text-gray-500">
+                    {{ now()->format('l, F j, Y g:i:s A') }}
+                </p>
+            </div>
         </div>
     </header>
 
@@ -137,8 +142,27 @@
                 iconClose.classList.toggle('hidden');
             });
         });
+
+        function updateTime() {
+            const now = new Date();
+            const options = {
+                timeZone: 'America/Los_Angeles',
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                hour12: true
+            };
+            const timeString = now.toLocaleString('en-US', options);
+            document.getElementById('current-time').textContent = timeString;
+        }
+
+        // Update time every second
+        setInterval(updateTime, 1000);
     </script>
 
 </body>
-
 </html>
