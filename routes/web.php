@@ -6,6 +6,7 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockMovementController;
+use App\Http\Controllers\TimeLogController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,15 +28,21 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/dashboard', [InventoryController::class, 'dashboard'])->name('dashboard');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [InventoryController::class, 'dashboard'])->name('dashboard');
 
-Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
-Route::get('/inventory/create', [InventoryController::class, 'create'])->name('inventory.create');
-Route::post('/inventory', [InventoryController::class, 'store'])->name('inventory.store');
-Route::get('/inventory/{id}', [InventoryController::class, 'show'])->name('inventory.show');
-Route::get('/inventory/{id}/edit', [InventoryController::class, 'edit'])->name('inventory.edit');
-Route::put('/inventory/{id}', [InventoryController::class, 'update'])->name('inventory.update');
-Route::delete('/inventory/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
+    Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+    Route::get('/inventory/create', [InventoryController::class, 'create'])->name('inventory.create');
+    Route::post('/inventory', [InventoryController::class, 'store'])->name('inventory.store');
+    Route::get('/inventory/{id}', [InventoryController::class, 'show'])->name('inventory.show');
+    Route::get('/inventory/{id}/edit', [InventoryController::class, 'edit'])->name('inventory.edit');
+    Route::put('/inventory/{id}', [InventoryController::class, 'update'])->name('inventory.update');
+    Route::delete('/inventory/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
+
+    Route::get('/clock-in-out', [TimeLogController::class, 'clockInOut'])->name('clock-in-out');
+    Route::post('/clock-in', [TimeLogController::class, 'clockIn'])->name('clock-in');
+    Route::post('/clock-out', [TimeLogController::class, 'clockOut'])->name('clock-out');
+});
 
 //Auth
 Route::get('/register', [RegisterUserController::class, 'create']);
