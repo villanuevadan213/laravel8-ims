@@ -26,10 +26,22 @@ class InventoryController extends Controller
     }
 
     // Show the inventory (List of all products)
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category')->latest()->simplePaginate(10);
-        return view('inventory.index', compact('products'));
+        // Get search input from the request
+        $searchTerm = $request->input('search');
+
+        // Fetch products with category, filter by search term if provided, and paginate
+        $products = Product::with('category')
+            ->when($searchTerm, function ($query, $searchTerm) {
+                return $query->where('name', 'like', '%' . $searchTerm . '%')
+                             ->orWhere('sku', 'like', '%' . $searchTerm . '%'); // Search by name or SKU
+            })
+            ->latest()
+            ->simplePaginate(10);
+
+        // Return the view with products and search term
+        return view('inventory.index', compact('products', 'searchTerm'));
     }
 
     // Show the form to create a new product

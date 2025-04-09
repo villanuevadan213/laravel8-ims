@@ -8,30 +8,42 @@ use Illuminate\Support\Facades\Auth;
 
 class TimeLogController extends Controller
 {
-    // Method to show the clock-in/out page
     public function clockInOut()
     {
-        // Get the user's time logs for the current date
         $timeLogs = TimeLog::where('user_id', auth()->id())
-                           ->whereDate('clock_in', now()->toDateString()) // Filter by today's date
+                           ->whereDate('clock_in', now()->toDateString()) 
                            ->get();
-
+    
+        // Compute overtime for each log
+        $timeLogs = $timeLogs->map(function ($log) {
+            $regularHours = 8;
+            
+            if ($log->clock_out) {
+                $totalHours = $log->clock_in->diffInHours($log->clock_out);
+                
+                $overtimeHours = $totalHours > $regularHours ? $totalHours - $regularHours : 0;
+    
+                $log->overtime = gmdate('H:i:s', $overtimeHours * 3600);
+            } else {
+                $log->overtime = '';
+            }
+    
+            return $log;
+        });
+    
         return view('clock-in-out', compact('timeLogs'));
     }
 
-    // Method for Clocking In
     public function clockIn(Request $request)
     {
-        // Check if the user has already clocked in today
         $existingClockIn = TimeLog::where('user_id', auth()->id())
-                                  ->whereDate('clock_in', now()->toDateString()) // Filter by today's date
+                                  ->whereDate('clock_in', now()->toDateString())
                                   ->first();
 
         if ($existingClockIn) {
             return redirect()->route('clock-in-out')->with('error', 'You have already clocked in today!');
         }
 
-        // Create a new clock-in record
         $timeLog = new TimeLog();
         $timeLog->user_id = auth()->id();
         $timeLog->clock_in = now();
@@ -40,23 +52,20 @@ class TimeLogController extends Controller
         return redirect()->route('clock-in-out')->with('success', 'You have successfully clocked in!');
     }
 
-    // Method for Clocking Out
     public function clockOut(Request $request)
     {
-        // Check if the user has already clocked out today
         $existingClockOut = TimeLog::where('user_id', auth()->id())
-                                   ->whereDate('clock_in', now()->toDateString()) // Filter by today's date
-                                   ->whereNotNull('clock_out') // Check if clock_out exists
+                                   ->whereDate('clock_in', now()->toDateString())
+                                   ->whereNotNull('clock_out') 
                                    ->first();
 
         if ($existingClockOut) {
             return redirect()->route('clock-in-out')->with('error', 'You have already clocked out today!');
         }
 
-        // Check if the user has clocked in but not clocked out yet
         $timeLog = TimeLog::where('user_id', auth()->id())
-                         ->whereDate('clock_in', now()->toDateString()) // Filter by today's date
-                         ->whereNull('clock_out') // Ensure there's no clock-out yet
+                         ->whereDate('clock_in', now()->toDateString())
+                         ->whereNull('clock_out')
                          ->latest()
                          ->first();
 
