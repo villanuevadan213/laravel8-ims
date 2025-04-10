@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuditController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\RegisterUserController;
 use App\Http\Controllers\SessionController;
@@ -7,7 +8,6 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\TimeLogController;
-use App\Http\Controllers\TrackingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,13 +47,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/clock-out', [TimeLogController::class, 'clockOut'])->name('clock-out');
 
 
-    Route::get('/tracking', [TrackingController::class, 'index'])->name('tracking.index');
-    Route::get('/tracking/create', [TrackingController::class, 'create'])->name('tracking.create');
-    Route::post('/tracking', [TrackingController::class, 'store'])->name('tracking.store');
-    Route::get('/tracking/{id}', [TrackingController::class, 'show'])->name('tracking.show');
-    Route::get('/tracking/{id}/edit', [TrackingController::class, 'edit'])->name('tracking.edit');
-    Route::put('/tracking/{id}', [TrackingController::class, 'update'])->name('tracking.update');
-    Route::delete('/tracking/{id}', [TrackingController::class, 'destroy'])->name('tracking.destroy');
+    Route::get('/tracking', [AuditController::class, 'index'])->name('tracking.index');
+    Route::get('/tracking/create', [AuditController::class, 'create'])->name('tracking.create');
+    Route::post('/tracking', [AuditController::class, 'store'])->name('tracking.store');
+    Route::get('/tracking/{id}', [AuditController::class, 'show'])->name('tracking.show');
+    Route::get('/tracking/{id}/edit', [AuditController::class, 'edit'])->name('tracking.edit');
+    Route::put('/tracking/{id}', [AuditController::class, 'update'])->name('tracking.update');
+    Route::delete('/tracking/{id}', [AuditController::class, 'destroy'])->name('tracking.destroy');
 });
 
 //Auth

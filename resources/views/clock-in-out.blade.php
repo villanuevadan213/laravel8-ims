@@ -99,17 +99,17 @@
                                                 {{ $log->break_out ? $log->break_out->format('H:i:s') : '—' }}
                                             </td>
                                             <td class="px-6 py-4">
-                                                {{ $log->clock_out ? $log->clock_out->format('H:i:s') : 'Not clocked out' }}
+                                                {{ $log->clock_out ? $log->clock_out->format('H:i:s') : '—' }}
                                             </td>
                                             <td class="px-6 py-4">
                                                 @if($log->clock_out)
                                                     {{ $log->clock_in->diff($log->clock_out)->format('%Hh %Im %Ss') }}
                                                 @else
-                                                    <span class="text-gray-500 italic">N/A</span>
+                                                    <span class="text-gray-500 italic">—</span>
                                                 @endif
                                             </td>
                                             <td class="px-6 py-4">
-                                                {{ $log->overtime }}
+                                                {{ $log->overtime ? $log->overtime : '—' }}
                                             </td>
                                             <td class="px-6 py-4">
                                                 @php
@@ -129,7 +129,11 @@
                                                     // Break remarks
                                                     if ($log->break_in && $log->break_out) {
                                                         $breakDuration = $log->break_in->diffInMinutes($log->break_out);
-                                                        $remark = $breakDuration > 60 ? 'Overbreak' : 'On Break';
+                                                        if ($breakDuration > 60) {
+                                                            $remark .= ' - <strong class="text-red-500">Overbreak</strong>';
+                                                        } else {
+                                                            $remark = 'On Break';
+                                                        }
                                                     } elseif ($log->break_in && !$log->break_out) {
                                                         $remark = 'On Break';
                                                     }
@@ -150,7 +154,7 @@
                                                     }
                                                 @endphp
 
-                                                {!! $remark !!}
+                                                <strong>{!! $remark !!}</strong>
                                             </td>
                                         </tr>
                     @endforeach

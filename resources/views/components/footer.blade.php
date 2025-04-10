@@ -8,6 +8,7 @@
                     <li><a href="/" class="hover:text-gray-400">Home</a></li>
                     <li><a href="/dashboard" class="hover:text-gray-400">Dashboard</a></li>
                     <li><a href="/inventory" class="hover:text-gray-400">Inventory</a></li>
+                    <li><a href="/tracking" class="hover:text-gray-400">Tracking</a></li>
                 </ul>
             </div>
 

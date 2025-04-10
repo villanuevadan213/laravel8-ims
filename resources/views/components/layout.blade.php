@@ -8,8 +8,9 @@
     <title>Dan - IMS</title>
     <!-- Stylesheets -->
     <script src="{{ asset('common/js/app.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
 </head>
 
 <body class="flex flex-col min-h-screen bg-gray-50">
@@ -166,6 +167,6 @@
         // Update time every second
         setInterval(updateTime, 1000);
     </script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 </body>
 </html>
