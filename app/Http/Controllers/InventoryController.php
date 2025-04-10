@@ -61,7 +61,7 @@ class InventoryController extends Controller
             'sku' => $request->sku,
             'quantity' => $request->quantity,
             'unit' => $request->unit,
-            'reorder_level' => '$request->reorder_level',
+            'reorder_level' => $request->reorder_level,
             'category_id' => $request->category_id,
         ]);
         
