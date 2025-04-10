@@ -26,7 +26,7 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'sku' => 'required|string|unique:products',
+            'sku' => 'required|string',
             'quantity' => 'required|integer',
             'unit' => 'required|string',
             'reorder_level' => 'required|integer',
@@ -63,7 +63,7 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'sku' => 'required|string|unique:products,sku,' . $id,
+            'sku' => 'required|string',
             'quantity' => 'required|integer',
             'unit' => 'required|string',
             'reorder_level' => 'required|integer',

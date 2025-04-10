@@ -14,7 +14,7 @@ class ProductFactory extends Factory
     {
         return [
             'name' => $this->faker->word,
-            'sku' => $this->faker->unique()->word,
+            'sku' => $this->faker->word,
             'category_id' => Category::inRandomOrder()->first()->id,
             'quantity' => $this->faker->numberBetween(1, 100),
             'unit' => $this->faker->word,

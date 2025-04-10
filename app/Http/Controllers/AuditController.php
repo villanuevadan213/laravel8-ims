@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Audit;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\StockMovement;
 use App\Models\Tracking;
 use Illuminate\Http\Request;
 use Faker\Factory as Faker;
@@ -41,29 +42,24 @@ class AuditController extends Controller
     
         foreach ($lines as $line) {
             $line = trim($line);
-        
+    
             if (preg_match('/^\d{12,}$/', $line)) {
                 $tracking = $line;
-            }
-            elseif (strlen($line) == 16 && preg_match('/^[A-Z0-9]+$/', $line)) {
+            } elseif (strlen($line) == 16 && preg_match('/^[A-Z0-9]+$/', $line)) {
                 $serial = $line;
-            }
-            elseif (preg_match('/^BKT[a-zA-Z0-9]+$/', $line)) {
+            } elseif (preg_match('/^BKT[a-zA-Z0-9]+$/', $line)) {
                 $basket = $line;
-            }
-            elseif (preg_match('/^PCN[a-zA-Z0-9]+$/', $line)) {
+            } elseif (preg_match('/^PCN[a-zA-Z0-9]+$/', $line)) {
                 $productControl = $line;
-            }
-            elseif (strcasecmp($line, 'TITLE') == 0) {
+            } elseif (strcasecmp($line, 'TITLE') == 0) {
                 $title = $line;
-            }
-            else {
+            } else {
                 $title = $line;
             }
         }
     
         if ($tracking) {
-            $last12Digits = substr($tracking, -12); 
+            $last12Digits = substr($tracking, -12);
             $trackingRecord = Tracking::where('tracking_no', 'like', '%' . $last12Digits)->first();
     
             if ($trackingRecord) {
@@ -72,25 +68,50 @@ class AuditController extends Controller
                 if ($audit) {
                     if ($audit->product_id) {
                         $product = Product::find($audit->product_id);
-                    
-                        if (!$product->name) {
-                            $product->name =  $faker->word;
-                            $product->save();
+    
+                        if ($product) {
+                            $oldQty = $product->quantity;
+                            $newQty = $faker->numberBetween(1, 100);
+    
+                            if (!$product->name) {
+                                $product->name = $faker->word;
+                            }
+    
+                            if ($oldQty != $newQty) {
+                                $product->quantity = $newQty;
+                                $product->save();
+    
+                                StockMovement::create([
+                                    'product_id' => $product->id,
+                                    'type' => ($newQty > $oldQty) ? 'in' : 'out',
+                                    'quantity' => abs($newQty - $oldQty),
+                                    'reference_note' => 'Stock Updated',
+                                ]);
+                            } else {
+                                $product->save();
+                            }
                         }
                     } else {
                         $product = Product::create([
-                            'name' => $faker->word,                         
-                            'sku' => $faker->unique()->word,                  
+                            'name' => $faker->word,
+                            'sku' => $faker->word,
                             'category_id' => Category::inRandomOrder()->first()->id,
-                            'quantity' => $faker->numberBetween(1, 100),      
-                            'unit' => $faker->word,                           
-                            'reorder_level' => $faker->numberBetween(1, 10),  
+                            'quantity' => $faker->numberBetween(1, 100),
+                            'unit' => $faker->word,
+                            'reorder_level' => $faker->numberBetween(1, 10),
                         ]);
-                    
+    
+                        StockMovement::create([
+                            'product_id' => $product->id,
+                            'type' => 'in',
+                            'quantity' => $product->quantity,
+                            'reference_note' => 'Initial Stock setup',
+                        ]);
+    
                         $audit->product_id = $product->id;
                         $audit->save();
                     }
-                
+    
                     $audit->status = 'Updated';
                     $audit->serial_no = $serial;
                     $audit->basket_no = $basket;
@@ -101,14 +122,21 @@ class AuditController extends Controller
                     return redirect('/tracking')->with('success', 'Audit updated successfully!');
                 } else {
                     $product = Product::create([
-                        'name' => $faker->word,                         
-                        'sku' => $faker->unique()->word,                  
+                        'name' => $faker->word,
+                        'sku' => $faker->word,
                         'category_id' => Category::inRandomOrder()->first()->id,
-                        'quantity' => $faker->numberBetween(1, 100),      
-                        'unit' => $faker->word,                           
-                        'reorder_level' => $faker->numberBetween(1, 10),  
+                        'quantity' => $faker->numberBetween(1, 100),
+                        'unit' => $faker->word,
+                        'reorder_level' => $faker->numberBetween(1, 10),
                     ]);
-                
+    
+                    StockMovement::create([
+                        'product_id' => $product->id,
+                        'type' => 'in',
+                        'quantity' => $product->quantity,
+                        'reference_note' => 'Initial Stock setup',
+                    ]);
+    
                     $audit = new Audit();
                     $audit->title = $title;
                     $audit->product_control_no = $productControl;
@@ -124,24 +152,31 @@ class AuditController extends Controller
             } else {
                 $randomDigits = '';
                 for ($i = 0; $i < 34 - strlen($tracking); $i++) {
-                    $randomDigits .= rand(0, 9); 
+                    $randomDigits .= rand(0, 9);
                 }
-            
+    
                 $newTrackingNo = $randomDigits . $tracking;
     
                 $trackingRecord = new Tracking();
                 $trackingRecord->tracking_no = $newTrackingNo;
                 $trackingRecord->save();
-            
+    
                 $product = Product::create([
-                    'name' => $faker->word,                         
-                    'sku' => $faker->unique()->word,                  
+                    'name' => $faker->word,
+                    'sku' => $faker->word,
                     'category_id' => Category::inRandomOrder()->first()->id,
-                    'quantity' => $faker->numberBetween(1, 100),      
-                    'unit' => $faker->word,                           
-                    'reorder_level' => $faker->numberBetween(1, 10),  
+                    'quantity' => $faker->numberBetween(1, 100),
+                    'unit' => $faker->word,
+                    'reorder_level' => $faker->numberBetween(1, 10),
                 ]);
-            
+    
+                StockMovement::create([
+                    'product_id' => $product->id,
+                    'type' => 'in',
+                    'quantity' => $product->quantity,
+                    'reference_note' => 'Initial Stock setup',
+                ]);
+    
                 $audit = new Audit();
                 $audit->title = $title;
                 $audit->product_control_no = $productControl;

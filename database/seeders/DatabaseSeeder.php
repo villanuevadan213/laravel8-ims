@@ -27,9 +27,9 @@ class DatabaseSeeder extends Seeder
         Category::factory(10)->create();
 
         // Create 50 products
-        Product::factory(50)->create();
+        Product::factory(20)->create();
 
         // Create 100 stock movements
-        StockMovement::factory(100)->create();
+        StockMovement::factory(40)->create();
     }
 }
