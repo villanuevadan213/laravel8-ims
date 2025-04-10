@@ -32,6 +32,7 @@
                             <x-nav-link href="/inventory" :active="request()->is('inventory')">Inventory</x-nav-link>
                             <x-nav-link href="/clock-in-out"
                                 :active="request()->is('clock-in-out')">Attendance</x-nav-link>
+                            <x-nav-link href="/tracking" :active="request()->is('tracking')">Tracking</x-nav-link>
                         </div>
                     </div>
                 </div>
@@ -87,6 +88,8 @@
                 class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Inventory</a>
             <a href="/clock-in-out"
                 class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Attendance</a>
+            <a href="/tracking"
+                class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Tracking</a>
         </div>
 
         <div class="border-t border-gray-700 pt-4 pb-3 px-2">

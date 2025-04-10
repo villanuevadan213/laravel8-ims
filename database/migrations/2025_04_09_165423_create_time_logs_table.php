@@ -18,6 +18,8 @@ class CreateTimeLogsTable extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamp('clock_in');
             $table->timestamp('clock_out')->nullable();
+            $table->timestamp('break_in')->nullable();
+            $table->timestamp('break_out')->nullable();
             $table->timestamps();
         });
     }

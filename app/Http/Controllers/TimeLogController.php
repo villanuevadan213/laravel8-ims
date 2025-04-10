@@ -52,6 +52,26 @@ class TimeLogController extends Controller
         return redirect()->route('clock-in-out')->with('success', 'You have successfully clocked in!');
     }
 
+    public function breakIn(Request $request)
+    {
+        $attendance = TimeLog::where('user_id', auth()->id())->whereDate('created_at', now()->toDateString())->first();
+        if ($attendance) {
+            $attendance->break_in = now();
+            $attendance->save();
+        }
+        return back()->with('success', 'Break started.');
+    }
+
+    public function breakOut(Request $request)
+    {
+        $attendance = TimeLog::where('user_id', auth()->id())->whereDate('created_at', now()->toDateString())->first();
+        if ($attendance) {
+            $attendance->break_out = now();
+            $attendance->save();
+        }
+        return back()->with('success', 'Break ended.');
+    }
+
     public function clockOut(Request $request)
     {
         $existingClockOut = TimeLog::where('user_id', auth()->id())

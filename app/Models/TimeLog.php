@@ -11,7 +11,7 @@ class TimeLog extends Model
 
     protected $guarded = [];
 
-    protected $dates = ['clock_in', 'clock_out'];
+    protected $dates = ['clock_in', 'clock_out', 'break_in', 'break_out'];
 
     // Define the relationship with the user model
     public function user()
