@@ -22,9 +22,11 @@ class RegisterUserController extends Controller
 
         $attributes['role'] = 'user';
 
+        // dd($attributes);
+
         $user = User::create($attributes);
         Auth::login($user);
 
-        return redirect('/items');
+        return redirect('/');
     }
 }
