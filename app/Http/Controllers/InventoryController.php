@@ -14,8 +14,8 @@ class InventoryController extends Controller
     {
         $totalProducts = Product::count();
         
-        $lowStock = Product::where('quantity', '<', 'reorder_level')->simplePaginate(10);
-        
+        $lowStock = Product::whereColumn('quantity', '<=', 'reorder_level')->simplePaginate(10);
+
         $recentMovements = StockMovement::latest()->take(5)->get();
         
         return view('dashboard', compact('totalProducts', 'lowStock', 'recentMovements'));
@@ -61,7 +61,7 @@ class InventoryController extends Controller
             'sku' => $request->sku,
             'quantity' => $request->quantity,
             'unit' => $request->unit,
-            'reorder_level' => $request->reorder_level,
+            'reorder_level' => '$request->reorder_level',
             'category_id' => $request->category_id,
         ]);
         

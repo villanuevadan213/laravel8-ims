@@ -18,9 +18,9 @@ class CreateProductsTable extends Migration
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('sku');
-            $table->string('quantity');
+            $table->integer('quantity');
             $table->string('unit');
-            $table->string('reorder_level');
+            $table->integer('reorder_level');
             $table->timestamps();
         });
     }

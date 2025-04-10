@@ -35,7 +35,7 @@
                 Low Stock Alerts
             </h3>
 
-            @if($lowStock->count() > 0)
+            @if($lowStock->count())
                 <ul class="list-disc pl-4 sm:pl-6 space-y-2 text-gray-700">
                     @foreach ($lowStock as $product)
                         <li
