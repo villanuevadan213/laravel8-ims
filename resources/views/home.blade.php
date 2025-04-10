@@ -16,26 +16,8 @@
         </h3>
         <ul class="list-disc pl-5 space-y-3">
             <li class="text-gray-700">
-                Add Clock in and Clock out functionality
-            </li>
-            <li class="text-gray-700">
                 Implement user roles and permissions
             </li>
-            <li class="text-gray-700">
-                Add a search functionality for better navigation
-            </li>
-            {{-- <li class="text-gray-700">
-                Implement a notification system for reminders
-            </li>
-            <li class="text-gray-700">
-                Add a feature to export data in various formats (CSV, PDF, etc.)
-            </li>
-            <li class="text-gray-700">
-                Add a feature to track user activity and logs
-            </li>
-            <li class="text-gray-700">
-                Create a feature to manage user profiles and settings
-            </li> --}}
         </ul>
     </div>
 

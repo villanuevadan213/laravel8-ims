@@ -6,18 +6,6 @@
     </x-slot>
 
     <div class="container mx-auto mt-4 px-4">
-        @if(session('success') || session('error'))
-            @if(session('success'))
-                <div class="bg-green-500 text-white p-3 sm:p-4 rounded-md text-sm sm:text-base">
-                    {{ session('success') }}
-                </div>
-            @elseif(session('error'))
-                <div class="bg-red-500 text-white p-3 sm:p-4 rounded-md text-sm sm:text-base">
-                    {{ session('error') }}
-                </div>
-            @endif
-        @endif
-
         <div class="flex justify-between items-center mb-6 flex-wrap">
             <!-- Add New Product Button -->
             <a href="{{ route('inventory.create') }}"
@@ -35,6 +23,18 @@
                 </button>
             </form>
         </div>
+
+        @if(session('success') || session('error'))
+            @if(session('success'))
+                <div class="bg-green-500 text-white p-3 sm:p-4 rounded-md text-sm sm:text-base">
+                    {{ session('success') }}
+                </div>
+            @elseif(session('error'))
+                <div class="bg-red-500 text-white p-3 sm:p-4 rounded-md text-sm sm:text-base">
+                    {{ session('error') }}
+                </div>
+            @endif
+        @endif
 
         <!-- Responsive Table with Scroll -->
         <div class="overflow-x-auto shadow-md sm:rounded-lg mt-4 sm:mt-6">

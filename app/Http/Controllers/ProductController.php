@@ -36,9 +36,9 @@ class ProductController extends Controller
         $product = Product::create([
             'name' => $request->name,
             'sku' => $request->sku,
-            'quantity' => $request->quantity,
+            'quantity' => (int) $request->quantity,
             'unit' => $request->unit,
-            'reorder_level' => $request->reorder_level,
+            'reorder_level' => (int) $request->reorder_level,
             'category_id' => $request->category_id,
         ]);
 
@@ -74,9 +74,9 @@ class ProductController extends Controller
         $product->update([
             'name' => $request->name,
             'sku' => $request->sku,
-            'quantity' => $request->quantity,
+            'quantity' => (int) $request->quantity,
             'unit' => $request->unit,
-            'reorder_level' => $request->reorder_level,
+            'reorder_level' => (int) $request->reorder_level,
             'category_id' => $request->category_id,
         ]);
 
